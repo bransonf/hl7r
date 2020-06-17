@@ -1,13 +1,10 @@
 Package: hl7r
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Parse HL7 Data Into a Native R Data Structure.
+Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Branson", "Fox", ,"bransonf@wustl.edu", c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4361-2811"))
+Description: Parse HL7 data into a native R data structure.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
