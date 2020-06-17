@@ -4,7 +4,7 @@
 Tasked with the aggregation of local healthcare institution data, I was receiving a large number of HL7 feeds. The majority of this aggregation process was already conducted in R. No implementation in R for parsing HL7 data existed. Existing solutions in Python and JavaScript failed to parse my data. The desire to refrain from invoking an additional language, in addition to their failure to parse my data led to `hl7r`
 
 ## About
-HL7 is a specification for data, typically pertaining to electronic health information. HL7 versions prior to `2.1` existed in an XML format, but versions since `2.1` are instead character delimited. This package supports only the later. Example HL7 data may look something like this (as reproduced from here)[https://help.interfaceware.com/getting-sample-hl7-data.html]
+HL7 is a specification for data, typically pertaining to electronic health information. HL7 versions prior to `2.1` existed in an XML format, but versions since `2.1` are instead character delimited. This package supports only the later. Example HL7 data may look something like this [as reproduced from here](https://help.interfaceware.com/getting-sample-hl7-data.html)
 
 ```hl7
 MSH|^~`&|ECG REPORTING|ROCHESTER|ERIS|ROCHESTER|20110621050440||ORU^R01|20110621050440|P|2.1
@@ -101,7 +101,7 @@ parsehl7(file = 'hospital.hl7')
 ## Issues
 This is not a comprehensive implementation according to the HL7 specification. Some considerations were made to warn the user of non-standard data, although not all will be accounted for. Due to the difficulty in obtaining a large test suite of data, this has only been tested with my limited availability of data.
 
-If you receive an error or unexpected output, please (file an issue.)[https://github.com/bransonf/hl7r/issues/new]
+If you receive an error or unexpected output, please [file an issue.](https://github.com/bransonf/hl7r/issues/new)
 
 ## License
 This work is released under the MIT License.
