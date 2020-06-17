@@ -1,10 +1,10 @@
 Package: hl7r
-Title: Parse HL7 Data Into a Native R Data Structure.
+Title: Parse HL7 Data Into a Native R Data Structure
 Version: 0.0.1
 Authors@R: 
     person("Branson", "Fox", ,"bransonf@wustl.edu", c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4361-2811"))
-Description: Parse HL7 data into a native R data structure.
+Description: Parse HL7 data from a file or character vector into a native R data structure.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
