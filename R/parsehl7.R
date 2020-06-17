@@ -79,13 +79,21 @@ parsehl7 <- function(feed, file){
 
     # For Any Fields Containing the Component Separator, Generate Lists
     for(field in seq_along(fields)){
-      if(grepl(component_sep, fields[field], fixed = TRUE)){
+      if(grepl(component_sep, fields[[field]], fixed = TRUE)){
         # Ignore MSH.2
         if(fields[[1]] == 'MSH' && field == 2){
           NULL
         }else{
-          sub_split <- strsplit(fields[[field]], component_sep, fixed = TRUE)
-          fields[[field]] <- as.list(unlist(sub_split))
+          sub_split <- as.list(unlist(strsplit(fields[[field]], component_sep, fixed = TRUE)))
+          # For Any Component Containing the Sub Component Separator, Generate Lists
+          for (sub in seq_along(sub_split)) {
+            if(grepl(subcomponent_sep, sub_split[[sub]], fixed = TRUE)){
+              sub_split[[sub]] <- as.list(unlist(strsplit(sub_split[[sub]], subcomponent_sep, fixed = TRUE)))
+            }
+          }
+
+          # Assign The Hierarchy to the Field
+          fields[[field]] <- sub_split
         }
       }
     }
