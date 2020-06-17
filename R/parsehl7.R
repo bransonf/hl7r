@@ -1,15 +1,20 @@
 #' A Versatile Parser for HL7 Version 2.x Feeds
 #'
-#' @param feed A vector representing an HL7 feed, the equivalent output of `readLines(file.hl7)`
+#' @usage parsehl7(feed, file)
+#'
+#' @param feed A vector representing an HL7 feed, the equivalent output of \code{readLines(file.hl7)}
 #' @param file A file containing a valid HL7 feed
 #'
+#' @return A List of Parsed HL7 Messages
+#'
+#' @description This function accepts either a character vector containing separate HL7 segments or a valid HL7 file as input, and returns a parsed R data structure.
 #'
 #' @export
 parsehl7 <- function(feed, file){
 
   # Check for the Specification of Arguments
   if(sum(missing(feed), missing(file)) != 1){
-    stop('Only one of `feed` and `file` must be specified')
+    stop('Only one of `feed` or `file` must be specified')
   }
 
   # Load the Data (If Necessary)
