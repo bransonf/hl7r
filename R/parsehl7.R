@@ -63,9 +63,10 @@ parsehl7 <- function(feed, file){
 
     # Get the Segment Key
     segment <- fields[[1]]
+
     # Validate
-    if(!grepl('[A-Z 0-9]{3}', segment)){
-      warning('Non-Standard Segment Key Detected, Expected 3 capital characters/numbers, got ', segment, 'at line ', line_n)
+    if(!grepl('[A-Z 0-9]{3}', segment) | !nchar(segment) == 3){
+      warning('Non-Standard Segment Key Detected, Expected 3 capital characters/numbers, got ', segment, ' at line ', line_n)
     }
 
     # While Key Exists, Add 1 to Name
