@@ -90,8 +90,13 @@ parsehl7 <- function(feed, file){
       }
     }
 
-    # Assign The Fields to the Key
-    messages[[index]][[segment]] <- fields
+    # Assign The Fields to the Key (Skipping the Segment Key)
+    # Special Case for MSH
+    if(segment == 'MSH'){
+      messages[[index]][[segment]] <- append(fields[2:length(fields)], field_sep, 0)
+    }else{
+      messages[[index]][[segment]] <- fields[2:length(fields)]
+    }
 
   }
 
