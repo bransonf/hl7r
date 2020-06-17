@@ -60,7 +60,6 @@ parsehl7 <- function(feed, file){
     }
     # Split on Field Separator
     fields <- as.list(unlist(strsplit(line, field_sep, fixed = TRUE)))
-    print(fields)
 
     # Get the Segment Key
     segment <- fields[[1]]
@@ -80,7 +79,6 @@ parsehl7 <- function(feed, file){
 
     # For Any Fields Containing the Component Separator, Generate Lists
     for(field in seq_along(fields)){
-      print(fields[[field]])
       if(grepl(component_sep, fields[field], fixed = TRUE)){
         # Ignore MSH.2
         if(fields[[1]] == 'MSH' && field == 2){
