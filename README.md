@@ -32,19 +32,29 @@ HL7 is not a tabular format, but rather a nested format. The list data structure
 list( # List of Messages (Indexed by Position)
 	list( # List of Segments in Message (Indexed by Key)
 		MSH = list( # List of Fields (Indexed by Position)
-			'|',
-			'^~`&',
-			'ECG REPORTING',
+			list( # List of Repetitions (Indexed by Position)
+				'|',
+				'^~`&',
+				'ECG REPORTING',
+				...
+			),
 			...
 		),
-		PID = list(
-			'',
-			'',
-			'999999999',
-			'',
-			list( # Fields with a Component Seperator i.e. ^ (Indexed by Position)
-				'TEST',
-				'PATIENT'
+		PID = list( # Fields
+			list( # Repetitions
+				'',
+				'',
+				'999999999',
+				'',
+				list( # Fields with a Component Seperator i.e. ^ (Indexed by Position)
+					'TEST',
+					'PATIENT',
+					list( # Fields with a Subcomponent Seperator i.e & (Indexed by Position)
+						...
+					),
+					...
+				),
+				...
 			),
 			...
 		), 
@@ -57,7 +67,7 @@ list( # List of Messages (Indexed by Position)
 Hence in the example (assuming this has been parsed into `messages`):
 
 ```r
-> messages[[1]][['OBX']][[3]]
+> messages[[1]][['OBX']][[3]][[1]]
 [[1]]
 [1] "93000.2"
 [[2]]
@@ -65,7 +75,7 @@ Hence in the example (assuming this has been parsed into `messages`):
 [[3]]
 [1] "CPT4"
 
-> messages[[1]][['OBX.2']][[3]]
+> messages[[1]][['OBX.2']][[3]][[1]]
 [[1]]
 [1] "93000.4"
 [[2]]
