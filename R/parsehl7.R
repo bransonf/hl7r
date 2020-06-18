@@ -27,6 +27,10 @@ parsehl7 <- function(feed, file){
     stop('The data specified does not appear to be valid HL7. The first line of the feed should begin with "MSH"')
   }
 
+  if(length(feed) < 2){
+    stop('HL7 Feed is too short. Make sure that segments are delimited by a new line.')
+  }
+
   # Allocate A List for Length of Messages
   n_msg <- sum(grepl('^MSH', feed))
   messages <- vector('list', n_msg)
@@ -37,13 +41,16 @@ parsehl7 <- function(feed, file){
     warning('This HL7 data uses a different field seperator than is recommended. `|` is recommended. `', field_sep, '` is used.')
   }
 
-  # Identify Other Delimiters
+  # Identify and Validate Other Delimiters
   MSH.2 <- strsplit(feed[1], field_sep, fixed = TRUE)[[1]][2]
   if(nchar(MSH.2) != 4){
     stop('Non-Standard Number of Encoding Characters Found in MSH.2. Expected 4, got ', nchar(MSH.2))
   }
+  if(grepl('[A-Z a-z 0-9]', MSH.2)){
+    warning('Alphanumeric Encoding Characters Found in MSH.2. This is likely an error!', MSH.2)
+  }
   component_sep <- substr(MSH.2, 1, 1)
-  repitition_sep <- substr(MSH.2, 2, 2)
+  repetition_sep <- substr(MSH.2, 2, 2)
   escape_char <- substr(MSH.2, 3, 3)
   subcomponent_sep <- substr(MSH.2, 4, 4)
 
@@ -78,24 +85,34 @@ parsehl7 <- function(feed, file){
       segment <- paste0(segment_key, n)
     }
 
-    # For Any Fields Containing the Component Delimiter, Generate Lists
     for(field in seq_along(fields)){
-      if(grepl(component_sep, fields[[field]], fixed = TRUE)){
-        # Ignore MSH.2
-        if(segment == 'MSH' && field == 2){
-          NULL
-        }else{
-          sub_split <- as.list(unlist(strsplit(fields[[field]], component_sep, fixed = TRUE)))
+      # Split Fields on the Repetition Delimiter
+      # Special Case for MSH
+      if(segment == 'MSH' && field == 2){
+        NULL
+      }else{
+        fields[[field]] <- as.list(unlist(strsplit(fields[[field]], repetition_sep, fixed = TRUE)))
 
-          # For Any Component Containing the Sub Component Delimiter, Generate Lists
-          for (sub in seq_along(sub_split)) {
-            if(grepl(subcomponent_sep, sub_split[[sub]], fixed = TRUE)){
-              sub_split[[sub]] <- as.list(unlist(strsplit(sub_split[[sub]], subcomponent_sep, fixed = TRUE)))
+        for(rep in seq_along(fields[[field]])){
+          # For Any Repetitions Containing the Component Delimiter, Generate Lists
+          if(grepl(component_sep, fields[[field]][[rep]], fixed = TRUE)){
+            # Ignore MSH.2
+            if(segment == 'MSH' && field == 2){
+              NULL
+            }else{
+              sub_split <- as.list(unlist(strsplit(fields[[field]][[rep]], component_sep, fixed = TRUE)))
+
+              # For Any Component Containing the Sub Component Delimiter, Generate Lists
+              for (sub in seq_along(sub_split)) {
+                if(grepl(subcomponent_sep, sub_split[[sub]], fixed = TRUE)){
+                  sub_split[[sub]] <- as.list(unlist(strsplit(sub_split[[sub]], subcomponent_sep, fixed = TRUE)))
+                }
+              }
+
+              # Assign The Hierarchy to the Field
+              fields[[field]][[rep]] <- sub_split
             }
           }
-
-          # Assign The Hierarchy to the Field
-          fields[[field]] <- sub_split
         }
       }
     }
@@ -107,7 +124,7 @@ parsehl7 <- function(feed, file){
     # Define Escaping
     escape <- function(string){
       string <- gsub(paste0(escape_char, 'F', escape_char), field_sep, string, fixed = TRUE)
-      string <- gsub(paste0(escape_char, 'R', escape_char), repitition_sep, string, fixed = TRUE)
+      string <- gsub(paste0(escape_char, 'R', escape_char), repetition_sep, string, fixed = TRUE)
       string <- gsub(paste0(escape_char, 'S', escape_char), component_sep, string, fixed = TRUE)
       string <- gsub(paste0(escape_char, 'T', escape_char), subcomponent_sep, string, fixed = TRUE)
       string <- gsub(paste0(escape_char, 'E', escape_char), escape_char, string, fixed = TRUE)
@@ -118,13 +135,19 @@ parsehl7 <- function(feed, file){
     if(grepl(escape_char, line, fixed = TRUE)){
       for(field in seq_along(fields)){
         if(length(fields[[field]]) > 1){
-          for(sub in seq_along(fields[[field]])){
-            if(length(fields[[field]][[sub]]) > 1){
-              for(sub2 in seq_along(fields[[field]][[sub]])){
-                fields[[field]][[sub]][[sub2]] <- escape(fields[[field]][[sub]][[sub2]])
+          for(rep in seq_along(fields[[field]])){
+            if(length(fields[[field]][[rep]]) > 1){
+              for(sub in seq_along(fields[[field]][[rep]])){
+                if(length(fields[[field]][[rep]][[sub]]) > 1){
+                  for(sub2 in seq_along(fields[[field]][[rep]][[sub]])){
+                    fields[[field]][[rep]][[sub]][[sub2]] <- escape(fields[[field]][[rep]][[sub]][[sub2]])
+                  }
+                }else{
+                  fields[[field]][[rep]][[sub]] <- escape(fields[[field]][[rep]][[sub]])
+                }
               }
             }else{
-              fields[[field]][[sub]] <- escape(fields[[field]][[sub]])
+              fields[[field]][[rep]] <- escape(fields[[field]][[rep]])
             }
           }
         }else{
@@ -145,5 +168,3 @@ parsehl7 <- function(feed, file){
 
   return(messages)
 }
-
-a = parsehl7(file = 'test.hl7')
