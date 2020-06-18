@@ -1,5 +1,5 @@
 Package: hl7r
-Title: Parse HL7 Data Into a Native R Data Structure
+Title: Parse HL7 Data into a Native R Data Structure
 Version: 0.0.1
 Authors@R: 
     person("Branson", "Fox", ,"bransonf@wustl.edu", c("aut", "cre"),
