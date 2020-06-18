@@ -32,20 +32,27 @@ HL7 is not a tabular format, but rather a nested format. The list data structure
 list( # List of Messages (Indexed by Position)
 	list( # List of Segments in Message (Indexed by Key)
 		MSH = list( # List of Fields (Indexed by Position)
-			list( # List of Repetitions (Indexed by Position)
 				'|',
 				'^~`&',
-				'ECG REPORTING',
-				...
+			list( # List of Repetitions (Indexed by Position)
+				'ECG REPORTING'
 			),
 			...
 		),
 		PID = list( # Fields
 			list( # Repetitions
 				'',
+			),
+			list(
 				'',
+			),
+			list(
 				'999999999',
+			),
+			list(
 				'',
+			),
+			list(			
 				list( # Fields with a Component Seperator i.e. ^ (Indexed by Position)
 					'TEST',
 					'PATIENT',
@@ -83,6 +90,12 @@ Hence in the example (assuming this has been parsed into `messages`):
 [[3]]
 [1] "CPT4"
 ```
+
+In other words, indexing works like:
+```
+message > segment > field > repetition > component > subcomponent
+```
+However, a tree may not always have this depth.
 
 ## Installation
 This package is not yet published to CRAN, so to install you must build from the source available here. This package requires no external dependencies to base-R.
