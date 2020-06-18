@@ -122,7 +122,7 @@ parsehl7(file = 'hospital.hl7')
 
 
 ## Issues
-This is not a comprehensive implementation according to the HL7 specification. Some considerations were made to warn the user of non-standard data, although not all will be accounted for. Due to the difficulty in obtaining a large test suite of data, this has only been tested with my limited availability of data.
+This is not a comprehensive implementation according to the HL7 specification. Some considerations were made to warn the user of non-standard data, although not all will be accounted for. In order to maintain compatibility with past, current and future versions, repeatability of fields is not explicitly handled. All fields are assumed to be repeatable, except for `MSH.1` and `MSH.2`. Due to the difficulty in obtaining a large test suite of data, this has only been tested with my limited availability of data.
 
 If you receive an error or unexpected output, please [file an issue.](https://github.com/bransonf/hl7r/issues/new)
 
