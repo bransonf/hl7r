@@ -134,24 +134,20 @@ parsehl7 <- function(feed, file){
 
     if(grepl(escape_char, line, fixed = TRUE)){
       for(field in seq_along(fields)){
-        if(length(fields[[field]]) > 1){
-          for(rep in seq_along(fields[[field]])){
-            if(length(fields[[field]][[rep]]) > 1){
-              for(sub in seq_along(fields[[field]][[rep]])){
-                if(length(fields[[field]][[rep]][[sub]]) > 1){
-                  for(sub2 in seq_along(fields[[field]][[rep]][[sub]])){
-                    fields[[field]][[rep]][[sub]][[sub2]] <- escape(fields[[field]][[rep]][[sub]][[sub2]])
-                  }
-                }else{
-                  fields[[field]][[rep]][[sub]] <- escape(fields[[field]][[rep]][[sub]])
+        for(rep in seq_along(fields[[field]])){
+          if(length(fields[[field]][[rep]]) > 1){
+            for(sub in seq_along(fields[[field]][[rep]])){
+              if(length(fields[[field]][[rep]][[sub]]) > 1){
+                for(sub2 in seq_along(fields[[field]][[rep]][[sub]])){
+                  fields[[field]][[rep]][[sub]][[sub2]] <- escape(fields[[field]][[rep]][[sub]][[sub2]])
                 }
+              }else{
+                fields[[field]][[rep]][[sub]] <- escape(fields[[field]][[rep]][[sub]])
               }
-            }else{
-              fields[[field]][[rep]] <- escape(fields[[field]][[rep]])
             }
+          }else{
+            fields[[field]][[rep]] <- escape(fields[[field]][[rep]])
           }
-        }else{
-          fields[[field]] <- escape(fields[[field]])
         }
       }
     }
