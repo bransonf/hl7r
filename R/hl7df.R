@@ -9,7 +9,9 @@
 #' @description This function returns a dataframe based on a parsed HL7 tree.
 #' It names columns as the equivalent route to a node.
 #' Values not present in a tree are returned as NA.
-#' An attempt is made to normalize paths between longer and shorter branches.
+#' An attempt is made to normalize paths between all branches.
+#'
+#' @importFrom dplyr bind_rows
 #'
 #' @export
 hl7df <- function(messages){

@@ -2,3 +2,4 @@
 
 export(hl7df)
 export(parsehl7)
+importFrom(dplyr,bind_rows)
