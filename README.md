@@ -98,7 +98,7 @@ message > segment > field > repetition > component > subcomponent
 However, a tree may not always have this depth.
 
 ## Installation
-This package is not yet published to CRAN, so to install you must build from the source available here. This package requires no external dependencies to base-R.
+This package is not yet published to CRAN, so to install you must build from the source available here. This package requires no external dependencies to base-R, but requires `dplyr` if you intend to use the `hl7_df()` function.
 
 ```r
 devtools::install_github('bransonf/hl7r') # OR
@@ -106,7 +106,7 @@ remotes::install_github('bransonf/hl7r')
 ```
 
 ## Usage
-This package exports a single function, and accepts either a character vector or file path directing to a valid HL7 file.
+This package exports two functions. The first reads `.hl7` data and accepts either a character vector or file path directing to a valid HL7 file.
 
 ```r
 library(hl7r)
@@ -120,6 +120,17 @@ parsehl7(file = 'hospital.hl7')
 
 ```
 
+There is also a function that traverses the tree structure to produce a normalized `data.frame`. This function depends on `dplyr`
+```r
+library(hl7r)
+
+# Parse from File
+hl7_tree <- parsehl7(file = 'hospital.hl7')
+
+# Coerce to Dataframe
+hl7_dataframe <- hl7df(hl7_tree)
+
+```
 
 ## Issues
 This is not a comprehensive implementation according to the HL7 specification. Some considerations were made to warn the user of non-standard data, although not all will be accounted for. In order to maintain compatibility with past, current and future versions, repeatability of fields is not explicitly handled. All fields are assumed to be repeatable, except for `MSH.1` and `MSH.2`. Due to the difficulty in obtaining a large test suite of data, this has only been tested with my limited availability of data.
