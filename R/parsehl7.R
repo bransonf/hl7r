@@ -76,6 +76,9 @@ parsehl7 <- function(feed, file){
       stop('Non-Standard Segment Key Detected, Expected 3 capital characters/numbers, got ', segment, ' at line ', line_n)
     }
 
+    # Prefix First Repetition with 1
+    segment <- paste0(segment, '.1')
+
     # While Key Exists, Add 1 to Name
     while(segment %in% names(messages[[index]])){
       segment_key <- regmatches(segment, regexec('\\d*$', text = segment), invert = TRUE)[[1]][1]

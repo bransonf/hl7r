@@ -31,7 +31,7 @@ HL7 is not a tabular format, but rather a nested format. The list data structure
 ```r
 list( # List of Messages (Indexed by Position)
 	list( # List of Segments in Message (Indexed by Key)
-		MSH = list( # List of Fields (Indexed by Position)
+		MSH.1 = list( # List of Fields (Indexed by Position)
 				'|',
 				'^~`&',
 			list( # List of Repetitions (Indexed by Position)
@@ -39,7 +39,7 @@ list( # List of Messages (Indexed by Position)
 			),
 			...
 		),
-		PID = list( # Fields
+		PID.1 = list( # Fields
 			list( # Repetitions
 				'',
 			),
@@ -74,7 +74,7 @@ list( # List of Messages (Indexed by Position)
 Hence in the example (assuming this has been parsed into `messages`):
 
 ```r
-> messages[[1]][['OBX']][[3]][[1]]
+> messages[[1]][['OBX.1']][[3]][[1]]
 [[1]]
 [1] "93000.2"
 [[2]]
@@ -93,7 +93,7 @@ Hence in the example (assuming this has been parsed into `messages`):
 
 In other words, indexing works like:
 ```
-message > segment > field > repetition > component > subcomponent
+message > segment > segment repetition > field > field repetition > component > subcomponent
 ```
 However, a tree may not always have this depth.
 
@@ -133,7 +133,9 @@ hl7_dataframe <- hl7df(hl7_tree)
 ```
 
 ## Issues
-This is not a comprehensive implementation according to the HL7 specification. Some considerations were made to warn the user of non-standard data, although not all will be accounted for. In order to maintain compatibility with past, current and future versions, repeatability of fields is not explicitly handled. All fields are assumed to be repeatable, except for `MSH.1` and `MSH.2`. Due to the difficulty in obtaining a large test suite of data, this has only been tested with my limited availability of data.
+This is not a comprehensive implementation according to the HL7 specification. Some considerations were made to warn the user of non-standard data, although not all will be accounted for. In order to maintain compatibility with past, current and future versions, repeatability of fields is not explicitly handled. All fields are assumed to be repeatable, except for `MSH.1.1` and `MSH.1.2`. Due to the difficulty in obtaining a large test suite of data, this has only been tested with my limited availability of data.
+
+As of 3/3/2021, the first repetition of a *segment* is now suffixed with `.1` in order to maintain a 5 number indexing pattern.
 
 If you receive an error or unexpected output, please [file an issue.](https://github.com/bransonf/hl7r/issues/new)
 
