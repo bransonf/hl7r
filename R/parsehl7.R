@@ -59,6 +59,7 @@ parsehl7 <- function(feed, file){
   for (line_n in seq_along(feed)){
     # Get String
     line <- feed[line_n]
+    if (line == "") next
 
     # Increment on New Message
     if(grepl('^MSH', line)){
